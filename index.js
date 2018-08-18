@@ -58,7 +58,7 @@ app.post('/api/persons', (req, res) => {
   person
     .save()
     .then(savedPerson => {
-      res.json(Contact.format(savedPerson))
+      res.json(Person.format(savedPerson))
     }).catch(error => {
       console.log(error)
     })
@@ -70,7 +70,7 @@ app.delete('/api/persons/:id', (req, res) => {
     .then(result => {
       res.status(204).end()
     }).catch(error => {
-      console.log(error)
+      res.status(400).send({ error: 'malformatted id' })
     })
 })
 
