@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
-const url = 'mongodb://<dbuser>:<dbpassword>@ds125322.mlab.com:25322/puhelinluettelofullstack'
+if ( process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
+}
+
+const url = process.env.MONGODB_URI
 
 mongoose.connect(url)
 
