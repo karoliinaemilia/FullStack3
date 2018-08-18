@@ -17,29 +17,6 @@ morgan.token('data', function(req, res) {
 
 app.use(morgan(':method :url: :data :status :res[content-length] - :response-time ms'))
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Martti Tienari",
-    number: "040-123456",
-    id: 2
-  },
-  {
-    name: "Arto Järvinen",
-    number: "040-123456",
-    id: 3
-  },
-  {
-    name: "Lea Kutvonen",
-    number: "040-123456",
-    id: 4
-  }
-]
-
 app.get('/info', (req, res) => {
   const date = new Date()
   res.send(`<p>puhelinluettelossa ${persons.length} henkilön tiedot</p>
@@ -51,6 +28,8 @@ app.get('/api/persons', (req, res) => {
     .find({})
     .then(persons => {
       res.json(persons.map(Person.format))
+    }).catch(error => {
+      console.log(error)
     })
 })
 
@@ -80,13 +59,19 @@ app.post('/api/persons', (req, res) => {
     .save()
     .then(savedPerson => {
       res.json(Contact.format(savedPerson))
+    }).catch(error => {
+      console.log(error)
     })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons = persons.filter(person => person.id !== id)
-  res.status(204).end()
+  Person
+    .findByIdAndRemove(req.params.id)
+    .then(result => {
+      res.status(204).end()
+    }).catch(error => {
+      console.log(error)
+    })
 })
 
 const PORT = process.env.PORT || 3001
