@@ -19,8 +19,11 @@ app.use(morgan(':method :url: :data :status :res[content-length] - :response-tim
 
 app.get('/info', (req, res) => {
   const date = new Date()
-  res.send(`<p>puhelinluettelossa ${persons.length} henkilön tiedot</p>
-  <p>${date}</p>`)
+  Person
+    .find({}).then(persons => {
+      res.send(`<p>puhelinluettelossa ${persons.length} henkilön tiedot</p>
+      <p>${date}</p>`)
+    })
 })
 
 app.get('/api/persons', (req, res) => {
@@ -34,13 +37,18 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person = persons.find(person => person.id === id)
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
-  }
+  Person
+    .findById(req.params.id)
+    .then(person => {
+      if (person) {
+        res.json(Person.format(person))
+      } else {
+        res.status(404).end()
+      }
+  }).catch(error => {
+    console.log(error)
+    res.status(400).send({ error: 'malformatted id' })
+  })
 })
 
 app.post('/api/persons', (req, res) => {
@@ -70,6 +78,7 @@ app.delete('/api/persons/:id', (req, res) => {
     .then(result => {
       res.status(204).end()
     }).catch(error => {
+      console.log(error)
       res.status(400).send({ error: 'malformatted id' })
     })
 })
@@ -87,6 +96,7 @@ app.put('/api/persons/:id', (req, res) => {
     .then(updatedPerson => {
       res.json(Person.format(updatedPerson))
     }).catch(error => {
+      console.log(error)
       res.status(400).send({ error: 'malformatted id' })
     })
 })
