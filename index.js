@@ -53,6 +53,16 @@ const generateId = () => {
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
+
+  if (body.name === undefined || body.number === undefined) {
+    return res.status(400).json({ error: "name or number missing" })
+  }
+
+  const find = persons.filter(p => p.name === body.name )
+  if (find.length >= 1) {
+    return res.status(400).json({ error: 'contact already exists' })
+  }
+
   const person = {
     name: body.name,
     number: body.number,
