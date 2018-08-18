@@ -45,17 +45,17 @@ app.get('/api/persons/:id', (req, res) => {
       } else {
         res.status(404).end()
       }
-  }).catch(error => {
-    console.log(error)
-    res.status(400).send({ error: 'malformatted id' })
-  })
+    }).catch(error => {
+      console.log(error)
+      res.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 app.post('/api/persons', (req, res) => {
   const body = req.body
 
   if (body.name === undefined || body.number === undefined) {
-    return res.status(400).json({ error: "name or number missing" })
+    return res.status(400).json({ error: 'name or number missing' })
   }
 
   const person = new Person({
@@ -63,7 +63,7 @@ app.post('/api/persons', (req, res) => {
     number: body.number
   })
 
-  Person.find({name: body.name })
+  Person.find({ name: body.name })
     .then(result => {
       if (result.length > 0) {
         res.status(400).json({ error: 'contact already exists' })
@@ -72,13 +72,13 @@ app.post('/api/persons', (req, res) => {
           .save()
           .then(savedPerson => {
             res.json(Person.format(savedPerson))
-        }).catch(error => {
-          console.log(error)
-        })
-      }
-  }).catch(error => {
-    console.log(error)
-  })
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+    }).catch(error => {
+      console.log(error)
+    })
 })
 
 app.delete('/api/persons/:id', (req, res) => {

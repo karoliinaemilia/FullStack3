@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const url = 'mongodb://<username>:<password>@ds125322.mlab.com:25322/puhelinluettelofullstack'
 
-mongoose.connect(url, {useNewUrlParser: true})
+mongoose.connect(url, { useNewUrlParser: true })
 
 const Person = mongoose.model('Person', {
   name: String,
